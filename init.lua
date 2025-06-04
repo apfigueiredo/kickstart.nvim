@@ -111,6 +111,8 @@ vim.o.mouse = 'a'
 -- Don't show the mode, since it's already in the status line
 vim.o.showmode = false
 
+vim.o.sessionoptions = 'blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions'
+
 -- Sync clipboard between OS and Neovim.
 --  Schedule the setting after `UiEnter` because it can increase startup-time.
 --  Remove this option if you want your OS clipboard to remain independent.
@@ -1017,6 +1019,48 @@ require('lazy').setup({
     },
   },
 })
+
+local Terminal = require('toggleterm.terminal').Terminal
+local lazygit = Terminal:new {
+  cmd = 'lazygit',
+  dir = 'git_dir',
+  direction = 'float',
+  float_opts = {
+    border = 'double',
+  },
+  -- function to run on opening the terminal
+  on_open = function(term)
+    vim.cmd 'startinsert!'
+    vim.api.nvim_buf_set_keymap(term.bufnr, 'n', 'q', '<cmd>close<CR>', { noremap = true, silent = true })
+  end,
+  -- function to run on closing the terminal
+  on_close = function(term)
+    vim.cmd 'startinsert!'
+  end,
+}
+
+function _lazygit_toggle()
+  lazygit:toggle()
+end
+
+Copilot_enabled = true
+function Toggle_copilot()
+  if Copilot_enabled then
+    vim.cmd 'Copilot disable'
+    Copilot_enabled = false
+    print 'Copilot disabled'
+  else
+    vim.cmd 'Copilot enable'
+    Copilot_enabled = true
+    print 'Copilot enabled'
+  end
+end
+
+vim.keymap.set('n', '<leader>tg', '<cmd>lua _lazygit_toggle()<CR>', { desc = 'Toggle LazyGit' })
+
+vim.keymap.set('n', '<leader>tt', '<cmd>ToggleTerm<cr>', { desc = 'Toggle Terminal' })
+vim.keymap.set('n', '<leader>tn', '<cmd>Neotree toggle<cr>', { desc = 'Toggle NeoTree' })
+vim.keymap.set('n', '<leader>tc', '<cmd>lua Toggle_copilot()<cr>', { desc = 'Toggle Copilot' })
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
