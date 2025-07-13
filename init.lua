@@ -682,7 +682,7 @@ require('lazy').setup({
       local servers = {
         clangd = {},
         -- gopls = {},
-        -- pyright = {},
+        pyright = {},
         -- rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
@@ -1070,6 +1070,9 @@ vim.g.copilot_no_tab_map = true -- Disable Copilot's tab mapping
 --vim.keymap.set('i', '<C-Tab>', '<Plug>(copilot-accept-word)', { silent = true, expr = true })
 vim.api.nvim_set_keymap('i', '<Tab>', 'copilot#AcceptWord()', { silent = true, expr = true, noremap = true })
 vim.api.nvim_set_keymap('i', '<C-;>', 'copilot#Accept()', { silent = true, expr = true, noremap = true })
+
+-- set c-s to save in all modes
+vim.keymap.set({ 'i', 'x', 'n', 's' }, '<C-s>', '<cmd>w<cr><esc>', { desc = 'Save file' })
 -- vim
 
 -- The line beneath this is called `modeline`. See `:help modeline`
