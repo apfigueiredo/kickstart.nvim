@@ -277,6 +277,7 @@ require('lazy').setup({
   { -- Adds git related signs to the gutter, as well as utilities for managing changes
     'lewis6991/gitsigns.nvim',
     opts = {
+      current_line_blame = true,
       signs = {
         add = { text = '+' },
         change = { text = '~' },
@@ -688,7 +689,7 @@ require('lazy').setup({
       local servers = {
         clangd = {},
         -- gopls = {},
-        -- pyright = {},
+        pyright = {},
         rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
@@ -934,6 +935,8 @@ require('lazy').setup({
       -- - sr)'  - [S]urround [R]eplace [)] [']
       require('mini.surround').setup()
 
+      require('mini.diff').setup()
+
       -- Simple and easy statusline.
       --  You could remove this setup call if you don't like it,
       --  and try some other statusline plugin
@@ -1068,6 +1071,16 @@ vim.keymap.set('n', '<leader>tg', '<cmd>lua _lazygit_toggle()<CR>', { desc = 'To
 vim.keymap.set('n', '<leader>tt', '<cmd>ToggleTerm<cr>', { desc = 'Toggle Terminal' })
 vim.keymap.set('n', '<leader>tn', '<cmd>Neotree toggle<cr>', { desc = 'Toggle NeoTree' })
 vim.keymap.set('n', '<leader>tc', '<cmd>lua Toggle_copilot()<cr>', { desc = 'Toggle Copilot' })
+
+vim.g.copilot_no_tab_map = true -- Disable Copilot's tab mapping
+--vim.api.nvim_set_keymap('i', '<Tab>', 'copilot#Next("<CR>")', { silent = true, expr = true, noremap = true })
+--vim.keymap.set('i', '<C-Tab>', '<Plug>(copilot-accept-word)', { silent = true, expr = true })
+vim.api.nvim_set_keymap('i', '<Tab>', 'copilot#AcceptWord()', { silent = true, expr = true, noremap = true })
+vim.api.nvim_set_keymap('i', '<C-;>', 'copilot#Accept()', { silent = true, expr = true, noremap = true })
+
+-- set c-s to save in all modes
+vim.keymap.set({ 'i', 'x', 'n', 's' }, '<C-s>', '<cmd>w<cr><esc>', { desc = 'Save file' })
+-- vim
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
