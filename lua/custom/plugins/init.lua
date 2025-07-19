@@ -30,6 +30,12 @@ return {
     },
   },
   {
+    'zbirenbaum/copilot.lua',
+    opts = function()
+      require('copilot.api').status = require 'copilot.status'
+    end,
+  },
+  {
     'folke/flash.nvim',
     event = 'VeryLazy',
     ---@type Flash.Config
