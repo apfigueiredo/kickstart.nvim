@@ -23,6 +23,7 @@ return {
 
     -- Add your own debuggers here
     'leoluz/nvim-dap-go',
+    'theHamsta/nvim-dap-virtual-text',
   },
   keys = {
     -- Basic debugging keymaps, feel free to change to your liking!
@@ -81,6 +82,8 @@ return {
     local dap = require 'dap'
     local dapui = require 'dapui'
 
+    require('nvim-dap-virtual-text').setup()
+
     require('mason-nvim-dap').setup {
       -- Makes a best effort to setup the various debuggers with
       -- reasonable debug configurations
@@ -95,6 +98,7 @@ return {
       ensure_installed = {
         -- Update this to ensure that you have the debuggers for the langs you want
         'delve',
+        'cppdbg',
       },
     }
 
@@ -131,6 +135,54 @@ return {
     --   local hl = (type == 'Stopped') and 'DapStop' or 'DapBreak'
     --   vim.fn.sign_define(tp, { text = icon, texthl = hl, numhl = hl })
     -- end
+    dap.adapters.gdb = {
+      id = 'gdb',
+      type = 'executable',
+      command = 'gdb',
+      args = { '--quiet', '--interpreter=dap' },
+    }
+
+    dap.configurations.c = {
+      {
+        name = 'Run executable (GDB)',
+        type = 'gdb',
+        request = 'launch',
+        program = function()
+          local path = vim.fn.input {
+            prompt = 'Path to executable: ',
+            default = vim.fn.getcwd() .. '/',
+            completion = 'file',
+          }
+          return (path and path ~= '') and path or dap.ABORT
+        end,
+      },
+      {
+        name = 'Run executable with args (GDB)',
+        type = 'gdb',
+        request = 'launch',
+        program = function()
+          local path = vim.fn.input {
+            prompt = 'Path to executable: ',
+            default = vim.fn.getcwd() .. '/',
+            completion = 'file',
+          }
+          return (path and path ~= '') and path or dap.ABORT
+        end,
+        args = function()
+          local args_str = vim.fn.input {
+            prompt = 'Arguments: ',
+            default = '',
+          }
+          return vim.split(args_str, '%s+', { trimempty = true })
+        end,
+      },
+      {
+        name = 'Attach to process (GDB)',
+        type = 'gdb',
+        request = 'attach',
+        processId = require('dap.utils').pick_process,
+      },
+    }
 
     dap.listeners.after.event_initialized['dapui_config'] = dapui.open
     dap.listeners.before.event_terminated['dapui_config'] = dapui.close
