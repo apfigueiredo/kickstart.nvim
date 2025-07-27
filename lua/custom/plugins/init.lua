@@ -12,6 +12,9 @@ return {
     'nvim-lua/plenary.nvim',
   } },
   {
+    'benlubas/neorg-interim-ls',
+  },
+  {
     'nvim-neorg/neorg',
     lazy = false, -- Disable lazy loading as some `lazy.nvim` distributions set `lazy = true` by default
     version = '*', -- Pin Neorg to the latest stable release
@@ -21,6 +24,10 @@ return {
         load = {
           ['core.defaults'] = {}, -- Load all the default modules
           ['core.concealer'] = {}, -- Adds pretty icons to your documents
+          ['external.interim-ls'] = {},
+          ['core.completion'] = {
+            config = { engine = { module_name = 'external.lsp-completion' } },
+          },
         },
       }
     end,
