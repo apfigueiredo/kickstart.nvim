@@ -28,8 +28,19 @@ return {
           ['core.completion'] = {
             config = { engine = { module_name = 'external.lsp-completion' } },
           },
+          ['core.dirman'] = {
+            config = {
+              workspaces = {
+                personal = '~/notes/personal',
+                work = '~/notes/work',
+              },
+              default_workspace = 'personal',
+            },
+          },
         },
       }
+      vim.keymap.set('n', '<leader>ni', '<cmd>Neorg index<cr>', { desc = '[neorg] Open Index' })
+      vim.keymap.set('n', '<leader>nt', '<cmd>Neorg journal today<cr>', { desc = '[neorg] Open Today Journal' })
     end,
   },
   { 'akinsho/toggleterm.nvim', version = '*', opts = {} },
