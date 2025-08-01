@@ -1081,6 +1081,13 @@ vim.api.nvim_set_keymap('i', '<C-;>', 'copilot#Accept()', { silent = true, expr 
 -- set c-s to save in all modes
 vim.keymap.set({ 'i', 'x', 'n', 's' }, '<C-s>', '<cmd>w<cr><esc>', { desc = 'Save file' })
 vim.keymap.set('n', '<leader>q', '<cmd>enew<bar>bd #<cr>', { desc = 'Quickly close current buffer' })
+
+local status, module = pcall(require, 'custom.local.config')
+if status then
+  -- If the local config module exists, call its setup function
+  module.setup()
+end
+
 -- vim
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
